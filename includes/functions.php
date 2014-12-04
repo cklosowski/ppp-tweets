@@ -71,8 +71,6 @@ function ppp_tweets_post_dropdown( $args = array() ) {
 
 	$posts = get_posts( array(
 		'post_type'      => 'any',
-		'orderby'        => 'date',
-		'order'          => 'DESC',
 		'posts_per_page' => $args['number']
 	) );
 
