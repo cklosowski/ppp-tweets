@@ -141,6 +141,7 @@ add_action( 'save_post', 'ppp_tweets_save_tweet', 99, 1 );
 function ppp_tweets_columns( $columns ) {
 	unset( $columns['author'] );
 	unset( $columns['date'] );
+	unset( $columns['likes'] );
 	$columns['tweet_status']   = __( 'Status', 'ppp-tweets-txt' );
 	$columns['tweet_link']     = __( 'Link', 'ppp-tweets-txt' );
 	$columns['image_attached'] = __( 'Image', 'ppp-tweets-txt' );
