@@ -166,12 +166,12 @@ function ppp_tweets_custom_columns( $column, $post_id ) {
 				$tweet_status = get_post_meta( $post_id, '_ppp_tweets_status', true );
 				// Check for legacy nested status (from first push)
 				$tweet_status = isset( $tweet_status['twitter'] ) ? $tweet_status['twitter'] : $tweet_status;
-				if ( isset( $status->id_str ) ) {
+				if ( isset( $tweet_status->id_str ) ) {
 					$class = 'yes';
-					$link  = 'https://twitter.com/' . $status->user->screen_name . '/status/' . $status->id_str;
-				} elseif( isset( $status->errors ) ) {
+					$link  = 'https://twitter.com/' . $tweet_status->user->screen_name . '/status/' . $tweet_status->id_str;
+				} elseif( isset( $tweet_status->errors ) ) {
 					$class   = 'no';
-					$message = $status->errors[0]->message;
+					$message = $tweet_status->errors[0]->message;
 				}
 			} elseif ( $status === 'pending' ) {
 				$class = 'editor-help';
