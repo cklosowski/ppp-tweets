@@ -163,7 +163,9 @@ function ppp_tweets_custom_columns( $column, $post_id ) {
 			} elseif ( $status === 'future' ) {
 				$class = 'clock';
 			} elseif ( $status === 'publish' ) {
-				$status = get_post_meta( $post_id, '_ppp_tweets_status', true );
+				$tweet_status = get_post_meta( $post_id, '_ppp_tweets_status', true );
+				// Check for legacy nested status (from first push)
+				$tweet_status = isset( $tweet_status['twitter'] ) ? $tweet_status['twitter'] : $tweet_status;
 				if ( isset( $status->id_str ) ) {
 					$class = 'yes';
 					$link  = 'https://twitter.com/' . $status->user->screen_name . '/status/' . $status->id_str;
