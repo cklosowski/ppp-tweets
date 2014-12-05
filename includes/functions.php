@@ -42,12 +42,9 @@ function ppp_tweets_share_post( $new_status, $old_status, $post ) {
 			$url = $maybe_link;
 		}
 
-		$status['twitter'] = ppp_send_tweet( $share_content . ' ' . $url, $post->ID, $media );
+		$status = ppp_send_tweet( $share_content . ' ' . $url, $post->ID, $media );
 
-		if ( isset( $ppp_options['enable_debug'] ) && $ppp_options['enable_debug'] == '1' ) {
-			update_post_meta( $post->ID, '_ppp-' . $name . '-status', $status );
-		}
-
+		update_post_meta( $post->ID, '_ppp_tweets_status', $status );
 		update_post_meta( $post->ID, '_ppp_tweets_was_shared', 'true' );
 
 	}

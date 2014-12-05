@@ -22,7 +22,7 @@ function edd_send_cart_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-chosen', PPP_TWEETS_URL . 'assets/css/chosen' . $suffix . '.css', array(), PPP_TWEETS_VERSION );
 		wp_enqueue_script( 'jquery-chosen', PPP_TWEETS_URL . 'assets/js/chosen.jquery' . $suffix . '.js', array( 'jquery' ), PPP_TWEETS_VERSION );
 		wp_enqueue_script( 'ppp-tweets-admin', PPP_TWEETS_URL . 'assets/js/admin-scripts' . $suffix . '.js', array( 'jquery' ), PPP_TWEETS_VERSION, false );
-		//wp_enqueue_style( 'edd_send_cart_admin_css', PPP_TWEETS_URL . 'assets/css/admin' . $suffix . '.css' );
+		wp_enqueue_style( 'ppp-tweets-admin-styles', PPP_TWEETS_URL . 'assets/css/admin-styles' . $suffix . '.css' );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_send_cart_admin_scripts', 100 );

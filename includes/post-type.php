@@ -163,11 +163,26 @@ function ppp_tweets_custom_columns( $column, $post_id ) {
 			} elseif ( $status === 'future' ) {
 				$class = 'clock';
 			} elseif ( $status === 'publish' ) {
-				$class = 'yes';
+				$status = get_post_meta( $post_id, '_ppp_tweets_status', true );
+				if ( isset( $status->id_str ) ) {
+					$class = 'yes';
+					$link  = 'https://twitter.com/' . $status->user->screen_name . '/status/' . $status->id_str;
+				} elseif( isset( $status->errors ) ) {
+					$class   = 'no';
+					$message = $status->errors[0]->message;
+				}
 			} elseif ( $status === 'pending' ) {
-				$class = 'help';
+				$class = 'editor-help';
 			}
-			echo '<span class="dashicons dashicons-' . $class . '"></span>';
+
+			if ( isset( $link ) ) {
+				echo '<span class="dashicons dashicons-' . $class . '"></span>';
+				echo '&nbsp;<a title="' . __( 'View Tweet', 'ppp-tweets-txt' ) . '" href="' . $link . '" target="_blank"><span class="dashicons dashicons-external"></span></a>';
+			} elseif ( isset( $message ) ) {
+				echo '<span title="' . $message . '" class="dashicons dashicons-' . $class . '"></span>';
+			} else {
+				echo '<span class="dashicons dashicons-' . $class . '"></span>';
+			}
 			break;
 
 		case 'tweet_link':
