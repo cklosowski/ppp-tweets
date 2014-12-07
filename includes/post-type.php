@@ -165,7 +165,7 @@ function ppp_tweets_custom_columns( $column, $post_id ) {
 			} elseif ( $status === 'publish' ) {
 				$tweet_status = get_post_meta( $post_id, '_ppp_tweets_status', true );
 				// Check for legacy nested status (from first push)
-				$tweet_status = isset( $tweet_status['twitter'] ) ? $tweet_status['twitter'] : $tweet_status;
+				$tweet_status = is_array( $tweet_status ) && isset( $tweet_status['twitter'] ) ? $tweet_status['twitter'] : $tweet_status;
 				if ( isset( $tweet_status->id_str ) ) {
 					$class = 'yes';
 					$link  = 'https://twitter.com/' . $tweet_status->user->screen_name . '/status/' . $tweet_status->id_str;
@@ -217,4 +217,3 @@ function ppp_tweets_custom_columns( $column, $post_id ) {
 
 }
 add_action( 'manage_posts_custom_column' , 'ppp_tweets_custom_columns', 10, 2 );
-
