@@ -82,8 +82,9 @@ class PPP_Tweets {
 		require_once PPP_TWEETS_DIR . 'includes/post-type.php';
 		require_once PPP_TWEETS_DIR . 'includes/scripts.php';
 		require_once PPP_TWEETS_DIR . 'includes/functions.php';
-		//require_once PPP_TWEETS_DIR . 'includes/actions.php';
-		//require_once PPP_TWEETS_DIR . 'includes/filters.php';
+		require_once PPP_TWEETS_DIR . 'includes/meta-boxes.php';
+		require_once PPP_TWEETS_DIR . 'includes/actions.php';
+		require_once PPP_TWEETS_DIR . 'includes/filters.php';
 	}
 
 	/**
