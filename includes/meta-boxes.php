@@ -49,8 +49,20 @@ function ppp_tweets_link_callback() {
 	<?php
 }
 
+/**
+ * Displays the side bar item of 'Tweet Info'
+ * @return void
+ */
 function ppp_tweets_info_callback() {
+	global $post;
+	$is_cropped = ppp_tweets_maybe_crop_image( $post->ID );
 	?>
-	<label><?php _e( 'Length: ', 'ppp-tweets-txt' ); ?><span id="ppp-tweets-details">0</span>
+	<p>
+		<label><?php _e( 'Length ', 'ppp-tweets-txt' ); ?>:</label>&nbsp;<span id="ppp-tweets-details">0</span>
+	</p>
+	<p>
+		<label><?php _e( 'Crop Image', 'ppp-tweets-txt' ); ?>:</label>&nbsp;<input type="checkbox" name="_ppp_tweets_crop_image" value="1" <?php echo checked( '1', $is_cropped, false ); ?> /><br />
+		<small><?php _e( 'When checked, will crop to the optimial Twitter image dimensions', 'ppp-tweets-txt' ); ?></small>
+	</p>
 	<?php
 }

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Alters the placeholder text on the 'title' field for the ppp_tweets post type
+ * @param  string $input The string to translate
+ * @return string        The string to display
+ */
 function ppp_tweets_title_placeholder_text( $input ) {
 
 	global $post_type;
@@ -15,6 +20,11 @@ function ppp_tweets_title_placeholder_text( $input ) {
 }
 add_filter( 'gettext','ppp_tweets_title_placeholder_text' );
 
+/**
+ * Alters the columsn for the ppp_tweet list table
+ * @param  array $columns Array of columns
+ * @return array          Array of modified columns
+ */
 function ppp_tweets_columns( $columns ) {
 	unset( $columns['author'] );
 	unset( $columns['date'] );

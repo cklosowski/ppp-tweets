@@ -2,55 +2,11 @@
 // Exit if accessed directly
 if( !defined( 'ABSPATH' ) ) exit;
 
-function ppp_tweets_share_post( $new_status, $old_status, $post ) {
-
-	if ( 'ppp_tweet' !== $post->post_type ) {
-		return;
-	}
-
-	$has_been_shared = get_post_meta( $post->ID, '_ppp_tweets_was_shared', true );
-	if ( !empty( $has_been_shared ) ) {
-		return;
-	}
-
-	if ( $new_status == 'publish' && $old_status != 'publish' ) {
-
-		global $ppp_options;
-
-		// Determine if we're seeing the share on publish in meta or $_POST
-		$share_content = $post->post_title;
-		$name          = 'ppp_tweets_share' . $post->ID;
-		$media         = ppp_post_has_media( $post->ID, 'tw', true );
-		$media         = strpos( $media, 'wp-includes/images/media/default.png' ) ? false : $media;
-		$url           = '';
-
-		if ( isset( $_POST['_ppp_tweets_link_post_id'] ) ) {
-			$maybe_post = $_POST['_ppp_tweets_link_post_id'];
-		} else {
-			$maybe_post = get_post_meta( $post->ID, '_ppp_tweets_link_post_id', true );
-		}
-
-		if ( isset( $_POST['_ppp_tweets_link'] ) ) {
-			$maybe_link = $_POST['_ppp_tweets_link'];
-		} else {
-			$maybe_link = get_post_meta( $post->ID, '_ppp_tweets_link', true );
-		}
-
-		if ( !empty( $maybe_post ) && $maybe_post !== '0' ) {
-			$url = get_permalink( $maybe_post );
-		} elseif ( !empty( $maybe_link ) ) {
-			$url = $maybe_link;
-		}
-
-		$status = ppp_send_tweet( $share_content . ' ' . $url, $post->ID, $media );
-
-		update_post_meta( $post->ID, '_ppp_tweets_status', $status );
-		update_post_meta( $post->ID, '_ppp_tweets_was_shared', 'true' );
-
-	}
-}
-add_action( 'transition_post_status', 'ppp_tweets_share_post', 99, 3);
-
+/**
+ * Generate a dropdown of posts
+ * @param  array  $args Array of Arguements
+ * @return string       Output of HTML
+ */
 function ppp_tweets_post_dropdown( $args = array() ) {
 
 	$defaults = array(
@@ -111,6 +67,11 @@ function ppp_tweets_post_dropdown( $args = array() ) {
 	return $output;
 }
 
+/**
+ * Renders a select box
+ * @param  array  $args Array of arguements
+ * @return string       HTML Output
+ */
 function ppp_tweets_render_select( $args = array() ) {
 
 	$defaults = array(
@@ -182,41 +143,39 @@ function ppp_tweets_render_select( $args = array() ) {
 	return $output;
 }
 
-function ppp_tweets_post_search() {
-	global $wpdb;
+/**
+ * Determins the crop image setting for a post id
+ * @param  int $post_id The post ID
+ * @return bool         If the image should be cropped
+ */
+function ppp_tweets_maybe_crop_image( $post_id ) {
+	$should_crop = get_post_meta( $post_id, '_ppp_tweets_crop_image', true );
 
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
-	$results = array();
-	$post_types = get_post_types( array( 'exclude_from_search' => true ) );
-	$post_types_query = implode( ',', $post_types );
-	if ( current_user_can( 'edit_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` IN ( $post_types_query ) AND `post_title` LIKE '%$search%' LIMIT 50" );
-	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` IN ( $post_types_query ) AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	}
+	$return = empty( $should_crop ) ? false : true;
 
-	if( $items ) {
-
-		foreach( $items as $item ) {
-
-			$results[] = array(
-				'id'   => $item->ID,
-				'name' => $item->post_title
-			);
-		}
-
-	} else {
-
-		$items[] = array(
-			'id'   => 0,
-			'name' => __( 'No results found', 'edd' )
-		);
-
-	}
-
-	echo json_encode( $results );
-
-	edd_die();
+	return apply_filters( 'ppp_tweets_maybe_crop', $return, $post_id );
 }
-add_action( 'wp_ajax_ppp_tweets_post_search', 'ppp_tweets_post_search' );
-add_action( 'wp_ajax_nopriv_ppp_tweets_post_search', 'ppp_tweets_post_search' );
+
+/**
+ * If the ppp_tweet post given should include media, and if it should be cropped or full size
+ * @param  int $post_id The Post ID
+ * @return mixed        Boolean false if no image should be used, string of a link to the imgae if one is to be used
+ */
+function ppp_tweets_use_media( $post_id ) {
+
+	if ( !has_post_thumbnail( $post_id ) ) {
+		return false;
+	}
+
+	$should_crop = isset( $_POST['_ppp_tweets_crop_image'] ) ? $_POST['_ppp_tweets_crop_image'] : ppp_tweets_maybe_crop_image( $post_id );
+	if ( !empty( $should_crop ) ) {
+		$media = ppp_post_has_media( $post_id, 'tw', true );
+		$media = strpos( $media, 'wp-includes/images/media/default.png' ) ? false : $media;
+	} else {
+		$thumb_id  = get_post_thumbnail_id( $post_id );
+		$media     = wp_get_attachment_image_src( $thumb_id, 'full', true );
+		$media     = $media[0];
+	}
+
+	return $media;
+}
