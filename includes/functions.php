@@ -179,3 +179,23 @@ function ppp_tweets_use_media( $post_id ) {
 
 	return $media;
 }
+
+function ppp_tweets_schedule() {
+	$args  = array( 'm' => date( 'Ym' ), 'post_type' => 'ppp_tweet' );
+	$posts = new WP_Query( $args );
+	if ( $posts->have_posts() ) {
+		while ( $posts->have_posts() ) {
+			$posts->the_post();
+			?>
+			{
+				id:    "<?php echo get_the_ID(); ?>",
+				title: "<?php echo get_the_title(); ?>",
+				start: "<?php echo date_i18n( 'Y-m-d/TH:i:s', strtotime( get_the_date() . ' ' . get_the_time() ) ); ?>",
+				className: "ppp-calendar-item-tw",
+			},
+			<?php
+			wp_reset_postdata();
+		}
+	}
+}
+add_action( 'ppp_insert_schedule_events', 'ppp_tweets_schedule' );

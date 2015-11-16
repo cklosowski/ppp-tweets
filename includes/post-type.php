@@ -38,7 +38,7 @@ function ppp_tweets_post_type() {
 		'map_meta_cap'        => true,
 		'has_archive'         => false,
 		'hierarchical'        => false,
-		'exclude_from_search' => true,
+		'exclude_from_search' => false,
 		'supports'            => apply_filters( 'ppp_tweets_supports', array( 'title', 'thumbnail' ) )
 	);
 	register_post_type( 'ppp_tweet', apply_filters( 'ppp_tweets_post_args', $tweets_args  ) );
