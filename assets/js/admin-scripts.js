@@ -138,7 +138,7 @@ function ppp_tweets_update_color() {
 
 	lengthField.text(len);
 
-	PPPColorLengthChange(len, lengthField);
+	pppSetLengthColors(len, lengthField);
 }
 
 function ppp_tweets_reset_values() {

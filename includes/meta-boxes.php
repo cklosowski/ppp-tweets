@@ -58,7 +58,7 @@ function ppp_tweets_info_callback() {
 	$is_cropped = ppp_tweets_maybe_crop_image( $post->ID );
 	?>
 	<p>
-		<label><?php _e( 'Length ', 'ppp-tweets-txt' ); ?>:</label>&nbsp;<span id="ppp-tweets-details">0</span>
+		<label><?php _e( 'Length ', 'ppp-tweets-txt' ); ?>:</label>&nbsp;<span class="ppp-text-length" id="ppp-tweets-details">0</span>
 	</p>
 	<p>
 		<label><?php _e( 'Crop Image', 'ppp-tweets-txt' ); ?>:</label>&nbsp;<input type="checkbox" name="_ppp_tweets_crop_image" value="1" <?php echo checked( '1', $is_cropped, false ); ?> /><br />
