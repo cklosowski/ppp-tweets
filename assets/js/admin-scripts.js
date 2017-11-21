@@ -142,6 +142,6 @@ function ppp_tweets_update_color() {
 }
 
 function ppp_tweets_reset_values() {
-	tweetLengthYellow = 122;
-	tweetLengthRed    = 141;
+	tweetLengthYellow = 240;
+	tweetLengthRed    = 257;
 }
